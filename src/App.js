@@ -6,37 +6,8 @@ import React, {useState, useEffect} from "react";
 import Map, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import json_hospitals_lat_lon from "./data/hospitals_lat_lon_geopkg_1"
-import { getByLabelText } from "@testing-library/react";
-
-const MAPBOX_TOKEN = 'pk.eyJ1Ijoic3VqaW5zIiwiYSI6ImNsYWs5czlyZjAzdmIzeHFzbW9wNnN5M2sifQ.9h_C92SPpqMocXTgutMoEA';
-
-// console.log(json_hospitals_lat_lon.features[0].properties.lat)
-// console.log(json_hospitals_lat_lon.features[0].properties.lng)
-
-// let hospitalsArr = json_hospitals_lat_lon.features
-// console.log(hospitalsArr[0].properties.lat)
-
-// bad code.....
-// let hospitalInfoGenerator = () => {
-//   let hospitalsArr = json_hospitals_lat_lon.features
-//   let hospitals = []
-//   for (let i = 0; i <= hospitalsArr.length; i++){
-//     let obj = {}
-//     obj['lat'] = hospitalsArr[i].properties.lat
-//     hospitals.push(obj)
-//   }
-//   return hospitals
-// }
-
-// console.log(hospitalInfoGenerator())
-
 
 function App() {
-  // const [hospitals, setHospitals] = useState({})
-  // console.log(json_hospitals_lat_lon.features[0].properties.lat)
-  // console.log(json_hospitals_lat_lon.features[0].properties.lng)
-
-  // const [hospitals, setHospitals] = useState({})
   const [showPopup, setShowPopup] = useState(true);
   const [popupContent, setPopupContent] = useState({lat: 40.71219, lng: -73.99986})
   const [searchValue, setSearchValue] = useState('Search Here')
@@ -58,29 +29,6 @@ function App() {
     }
   })
 
-  // this causes infintie rerenders
-  // setHospitals(data)
-
-  // why does this return an array of ints??
-  // const hospitalMarkers = data.map((lat, lng) => {
-
-  //   return (lat,lng)
-  // });
-
-  // showPopup && (
-  //   <Popup longitude={lng} latitude={lat}
-  //     anchor="bottom"
-  //     onClose={() => setShowPopup(false)}>
-  //     You are here
-  //   </Popup>)
-  
-  // )
-
-  // if searchValue &&, return markers that match searchValue-- facility_name, else return all markers
-
-
-    // console.log(data.map(({lat, lng, facility_name}) => {
-    //   return({lat, lng, facility_name})}))
 
     const facilityArr =  data.map(({lat, lng, facility_name}) => {
       return({lat, lng, facility_name})})
@@ -121,13 +69,6 @@ function App() {
 
       return (markers)
   });
-
-  // const hospitalMarkers = data.map((element) => {
-
-  //   return (element.lat,element.lng)
-  // });
-
-  // console.log(hospitalMarkers)
 
   
   const viewport = {
