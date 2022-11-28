@@ -7,6 +7,8 @@ import Map, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import json_hospitals_lat_lon from "./data/hospitals_lat_lon_geopkg_1"
 
+const MAPBOX_TOKEN = 'pk.eyJ1Ijoic3VqaW5zIiwiYSI6ImNsYWs5czlyZjAzdmIzeHFzbW9wNnN5M2sifQ.9h_C92SPpqMocXTgutMoEA';
+
 function App() {
   const [showPopup, setShowPopup] = useState(true);
   const [popupContent, setPopupContent] = useState({lat: 40.71219, lng: -73.99986})
@@ -29,45 +31,44 @@ function App() {
     }
   })
 
-
     const facilityArr =  data.map(({lat, lng, facility_name}) => {
       return({lat, lng, facility_name})})
-    console.log('facilityArray',facilityArr)
-    console.log('above filtered',searchValue)
-    const filtered = facilityArr.filter(obj => obj.facility_name.includes(searchValue) && obj.lat !== null);
-    console.log(filtered)
-    const filteredMarkers = filtered.length > 0 ? filtered.map(({lat, lng, facility_name})=>{
-      console.log('inside filtered Markers', lat, lng)
+
+    const filtered = facilityArr.filter(obj => searchValue && obj.facility_name.includes(searchValue) && obj.lat !== null);
+
+
+    const filteredMarkers = filtered.map(({lat, lng, facility_name})=>{
       return (
       <Marker>
         longitude={lng}
         latitude={lat}
       </Marker>
-    )}) : null 
+    )});
 
     const hospitalMarkers = data.map(({lat, lng, facility_name}) => {
       const handleClick = () => {
         setPopupContent({lat, lng, facility_name})
         setShowPopup(true)
         }
-    //   return(
-    //   <Marker
-    //     longitude={lng}
-    //     latitude={lat}
-    //     onClick={handleClick}
-    //   />
-    // )
-      const markers = searchValue === 'Search Here' ? (
-        <>
-        <Marker
-          longitude={lng}
-          latitude={lat}
-          onClick={handleClick}
-        />
-        </> 
-      ) : null
+      return(
+      <Marker
+        longitude={lng}
+        latitude={lat}
+        onClick={handleClick}
+      />)
 
-      return (markers)
+
+      // const markers = searchValue ? (
+      //   <>
+      //   <Marker
+      //     longitude={lng}
+      //     latitude={lat}
+      //     onClick={handleClick}
+      //   />
+      //   </> 
+      // ) : null
+
+
   });
 
   
@@ -83,28 +84,39 @@ function App() {
     return true
   }
   console.log('searchValue is', searchValue)
+
   return (
         <>
-         <input type='text' id='search' value={searchValue} onChange={handleSearch}>
-        
-         </input>
+        <div className="search-container">
+          <div className="search-inner">
+            <input type='text' id='search' value={searchValue} onChange={handleSearch}/>
+          </div>
+          <div className="dropdown">
+            {
+              filtered
+              .slice(0,10)
+              .map((obj)=>{return (<div>{obj.facility_name}</div>)})
+            }
+          </div>
+        </div>
+
           <Map
             mapboxAccessToken={MAPBOX_TOKEN}
             initialViewState={viewport}
             mapStyle="mapbox://styles/mapbox/streets-v11"
           >
            
-           
-            {showPopup && <Popup
-          anchor='bottom'
-          longitude={popupContent.lng}
-          latitude={popupContent.lat}
-          closeOnClick={false}
-          onClose={() => setShowPopup(false)}
-        >
-          <h3> {popupContent.facility_name}</h3>
-        </Popup>}
-        {hospitalMarkers}
+          {showPopup && <Popup
+            anchor='bottom'
+            longitude={popupContent.lng}
+            latitude={popupContent.lat}
+            closeOnClick={false}
+            onClose={() => setShowPopup(false)}
+          >
+            <h3> {popupContent.facility_name}</h3>
+          </Popup>}
+
+        {searchValue === 'Search Here' ? hospitalMarkers : null}
         {filteredMarkers}
           </Map>
         </>
