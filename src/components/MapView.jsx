@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import json_hospitals_lat_lon from '../data/hospitals_lat_lon_geopkg_1';
@@ -17,6 +17,7 @@ function MapView() {
     lng: -73.99986,
   });
   const [searchValue, setSearchValue] = useState('');
+  const mapRef = useRef();
 
   const data = json_hospitals_lat_lon.features.map(
     ({
@@ -82,6 +83,10 @@ function MapView() {
     return true;
   }
 
+  function handleSearchClick(event){
+    console.log(mapRef, event)
+  }
+
   return (
     <>
       <div className="search-container">
@@ -95,8 +100,8 @@ function MapView() {
         />
         {searchValue ? (
           <ul className="search-outer">
-            {facilities.slice(0, 10).map((obj) => {
-              return <li>{obj.facility_name}</li>;
+            {facilities.slice(0, 10).map((obj,i) => {
+              return <li key={i} className="search-item"><a href="#" onClick={handleSearchClick}>{obj.facility_name}</a></li>;
             })}
           </ul>
         ) : null}
@@ -107,6 +112,7 @@ function MapView() {
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={viewport}
         mapStyle="mapbox://styles/mapbox/streets-v11"
+        ref={mapRef}
       >
         {showPopup && (
           <Popup
