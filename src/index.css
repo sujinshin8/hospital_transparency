@@ -29,20 +29,52 @@ code {
   border-radius: 4px;
   } */
 
-  body, #root {
-    margin: 0;
-    padding: 0;
-    width: 100vh;
-    height: 100vh;
-  }
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
 
-  #search{
-    position: absolute;
-    z-index: 99;
-    left: 1rem;
-    top: 1rem;
-    width: 90vw;
-    height: 2rem;
-    font-size: 2rem;
-    padding: 0.3rem;
-  }
+#root {
+  position: relative;
+}
+
+.search-container {
+  position: absolute;
+  z-index: 99;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.search-inner{
+  width: 90%;
+  height: 1.2rem;
+  font-size: 1.2rem;
+  padding: 0.5rem 0.3rem;
+  border-radius: 4px;
+}
+
+.search-outer{
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.search-outer li:hover{
+  background-color: rgba(185, 185, 185, 0.8);
+}
+
+#map{
+  width: 100vw;
+  height: 100vh;
+}
