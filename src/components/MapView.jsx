@@ -16,17 +16,8 @@ function MapView() {
     lat: 40.71219,
     lng: -73.99986,
   });
-  const [searchValue, setSearchValue] = useState('Search Here');
-
-  // useEffect(()=> {
-  //   const data = json_hospitals_lat_lon.features.map(({properties: {lat, lng, facility_name, address, city, zip_code, county_name, phone_number, hospital_type, overall_rating}}) => {
-  //     return {
-  //       lat, lng, facility_name, address, city, zip_code, county_name, phone_number, hospital_type, overall_rating
-  //     }
-  //   })
-  //   console.log(data)
-  // },[])
-
+  const [searchValue, setSearchValue] = useState('');
+  
   const data = json_hospitals_lat_lon.features.map(
     ({
       properties: {
@@ -57,42 +48,26 @@ function MapView() {
     },
   );
 
-  const facilityArr = data.map(({ lat, lng, facility_name }) => {
-    return { lat, lng, facility_name };
-  });
-
-  const filtered = facilityArr.filter(
-    (obj) =>
-      searchValue &&
-      obj.facility_name.includes(searchValue) &&
-      obj.lat !== null,
-  );
-
-  const filteredMarkers = filtered.map(({ lat, lng, facility_name }) => {
-    return (
-      <Marker>
-        longitude={lng}
-        latitude={lat}
-      </Marker>
+  const facilities = data
+    .filter(({ lat, lng }) => lat !== null && lng !== null) //filter out facilities without latlng
+    .filter(({facility_name}) =>
+        //filter facilities with matching name; todo make matching more complex
+        facility_name.toLowerCase().includes(searchValue.toLowerCase())
     );
-  });
 
-  const hospitalMarkers = data.map(({ lat, lng, facility_name }) => {
+  const hospitalMarkers = facilities.map(({ lat, lng, facility_name }) => {
     const handleClick = () => {
       setPopupContent({ lat, lng, facility_name });
       setShowPopup(true);
     };
-    return <Marker longitude={lng} latitude={lat} onClick={handleClick} />;
-
-    // const markers = searchValue ? (
-    //   <>
-    //   <Marker
-    //     longitude={lng}
-    //     latitude={lat}
-    //     onClick={handleClick}
-    //   />
-    //   </>
-    // ) : null
+    return (
+      <Marker
+        key={facility_name}
+        longitude={lng}
+        latitude={lat}
+        onClick={handleClick}
+      />
+    );
   });
 
   const viewport = {
@@ -100,13 +75,13 @@ function MapView() {
     longitude: -73.96625,
     zoom: 11,
   };
-  console.log('is this setting searchValue', searchValue);
+
   function handleSearch(event) {
     setSearchValue(event.target.value);
 
     return true;
   }
-  console.log('searchValue is', searchValue);
+
   return (
     <>
       <div className="search-container">
@@ -114,18 +89,20 @@ function MapView() {
           <input
             type="text"
             id="search"
+            placeholder="Search a hospital name"
             value={searchValue}
             onChange={handleSearch}
           />
         </div>
         <div className="dropdown">
-          {filtered.slice(0, 10).map((obj) => {
+          {facilities.slice(0, 10).map((obj) => {
             return <div>{obj.facility_name}</div>;
           })}
         </div>
       </div>
 
       <Map
+        id="map"
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={viewport}
         mapStyle="mapbox://styles/mapbox/streets-v11"
@@ -142,8 +119,7 @@ function MapView() {
           </Popup>
         )}
 
-        {searchValue === 'Search Here' ? hospitalMarkers : null}
-        {filteredMarkers}
+        {hospitalMarkers}
       </Map>
     </>
   );

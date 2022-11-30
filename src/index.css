@@ -29,20 +29,31 @@ code {
   border-radius: 4px;
   } */
 
-  body, #root {
-    margin: 0;
-    padding: 0;
-    width: 100vh;
-    height: 100vh;
-  }
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
 
-  #search{
-    position: absolute;
-    z-index: 99;
-    left: 1rem;
-    top: 1rem;
-    width: 90vw;
-    height: 2rem;
-    font-size: 2rem;
-    padding: 0.3rem;
-  }
+#root {
+  position: relative;
+}
+
+#search {
+  position: absolute;
+  z-index: 99;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 90vw;
+  height: 2rem;
+  font-size: 2rem;
+  padding: 0.5rem;
+}
+
+#map{
+  width: 100vw;
+  height: 100vh;
+}
