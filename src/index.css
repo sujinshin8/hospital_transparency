@@ -70,8 +70,13 @@ body,
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.search-outer li:hover{
+.search-item:hover{
   background-color: rgba(185, 185, 185, 0.8);
+}
+
+.search-item a:focus{
+  background-color: rgba(185, 185, 185, 0.8);
+  outline: solid 1px rgb(40, 40, 40);
 }
 
 #map{
