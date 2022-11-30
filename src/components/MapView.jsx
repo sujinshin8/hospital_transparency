@@ -17,7 +17,7 @@ function MapView() {
     lng: -73.99986,
   });
   const [searchValue, setSearchValue] = useState('');
-  
+
   const data = json_hospitals_lat_lon.features.map(
     ({
       properties: {
@@ -50,9 +50,9 @@ function MapView() {
 
   const facilities = data
     .filter(({ lat, lng }) => lat !== null && lng !== null) //filter out facilities without latlng
-    .filter(({facility_name}) =>
-        //filter facilities with matching name; todo make matching more complex
-        facility_name.toLowerCase().includes(searchValue.toLowerCase())
+    .filter(({ facility_name }) =>
+      //filter facilities with matching name; todo make matching more complex
+      facility_name.toLowerCase().includes(searchValue.toLowerCase()),
     );
 
   const hospitalMarkers = facilities.map(({ lat, lng, facility_name }) => {
@@ -85,20 +85,21 @@ function MapView() {
   return (
     <>
       <div className="search-container">
-        <div className="search-inner">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search a hospital name"
-            value={searchValue}
-            onChange={handleSearch}
-          />
-        </div>
-        <div className="dropdown">
-          {facilities.slice(0, 10).map((obj) => {
-            return <div>{obj.facility_name}</div>;
-          })}
-        </div>
+        <input
+          type="text"
+          id="search"
+          className="search-inner"
+          placeholder="Search a hospital name"
+          value={searchValue}
+          onChange={handleSearch}
+        />
+        {searchValue ? (
+          <ul className="search-outer">
+            {facilities.slice(0, 10).map((obj) => {
+              return <li>{obj.facility_name}</li>;
+            })}
+          </ul>
+        ) : null}
       </div>
 
       <Map
