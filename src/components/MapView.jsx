@@ -75,7 +75,7 @@ function MapView() {
   const viewport = {
     latitude: 40.78343,
     longitude: -73.96625,
-    zoom: 11,
+    zoom: 10,
   };
 
   return (
