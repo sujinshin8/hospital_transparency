@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import json_hospitals_lat_lon from '../data/hospitals_lat_lon_geopkg_1';
+import HospitalSearch from './HospitalSearch';
 
 // ref docs:
 // https://visgl.github.io/react-map-gl/docs
@@ -77,38 +78,14 @@ function MapView() {
     zoom: 11,
   };
 
-  function handleSearch(event) {
-    setSearchValue(event.target.value);
-    return true;
-  }
-
-  function handleSearchClick(lng, lat){
-    mapRef.current.flyTo({center:[lng, lat], zoom:15})
-  }
-
   return (
     <>
-      <div className="search-container">
-        <input
-          type="text"
-          id="search"
-          className="search-inner"
-          placeholder="Search a hospital name"
-          value={searchValue}
-          onChange={handleSearch}
-        />
-        {searchValue ? (
-          <ul className="search-outer">
-            {facilities.slice(0, 10).map((obj,i) => {
-              return <li key={i} className="search-item">
-                <a href="#" 
-                  onClick={() => handleSearchClick(obj.lng, obj.lat)}
-                  >{obj.facility_name}</a></li>;
-            })}
-          </ul>
-        ) : null}
-      </div>
-
+      <HospitalSearch
+        setSearchValue = {setSearchValue}
+        mapRef = {mapRef}
+        searchValue = {searchValue}
+        facilities = {facilities}
+      />
       <Map
         id="map"
         mapboxAccessToken={MAPBOX_TOKEN}
