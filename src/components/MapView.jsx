@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import json_hospitals_lat_lon from '../data/hospitals_lat_lon_geopkg_1';
@@ -79,12 +79,11 @@ function MapView() {
 
   function handleSearch(event) {
     setSearchValue(event.target.value);
-
     return true;
   }
 
-  function handleSearchClick(event){
-    console.log(mapRef, event)
+  function handleSearchClick(lng, lat){
+    mapRef.current.flyTo({center:[lng, lat], zoom:15})
   }
 
   return (
@@ -101,7 +100,10 @@ function MapView() {
         {searchValue ? (
           <ul className="search-outer">
             {facilities.slice(0, 10).map((obj,i) => {
-              return <li key={i} className="search-item"><a href="#" onClick={handleSearchClick}>{obj.facility_name}</a></li>;
+              return <li key={i} className="search-item">
+                <a href="#" 
+                  onClick={() => handleSearchClick(obj.lng, obj.lat)}
+                  >{obj.facility_name}</a></li>;
             })}
           </ul>
         ) : null}
