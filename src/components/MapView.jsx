@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import Map, { Marker, Popup } from 'react-map-gl';
+import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import json_hospitals_lat_lon from '../data/hospitals_lat_lon_geopkg_1';
 import HospitalSearch from './HospitalSearch';
@@ -106,6 +106,8 @@ function MapView() {
         )}
 
         {hospitalMarkers}
+
+        <NavigationControl></NavigationControl>
       </Map>
     </>
   );
