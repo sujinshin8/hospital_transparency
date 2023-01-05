@@ -1,28 +1,55 @@
 import MapView from './components/MapView';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import HospitalSearch from './components/HospitalSearch';
+import json_hospitals_lat_lon from './data/hospitals_lat_lon_geopkg_1';
 
 function App() {
   const [isOnLoadScreen, setIsOnLoadScreen] = useState(true);
+  const [searchValue, setSearchValue] = useState('');
+  const mapRef = useRef();
 
-  console.log(isOnLoadScreen)
+  const data = json_hospitals_lat_lon.features.map(
+    ({
+      properties: {
+        lat,
+        lng,
+        facility_name,
+        address,
+        city,
+        zip_code,
+        county_name,
+        phone_number,
+        hospital_type,
+        overall_rating,
+      },
+    }) => {
+      return {
+        lat,
+        lng,
+        facility_name,
+        address,
+        city,
+        zip_code,
+        county_name,
+        phone_number,
+        hospital_type,
+        overall_rating,
+      };
+    },
+  );
 
-  // it wasn't working before because I had imported setTimeout but that is not something you should import to make this work...
+  const facilities = data
+    .filter(({ lat, lng }) => lat !== null && lng !== null) //filter out facilities without latlng
+    .filter(({ facility_name }) =>
+      //filter facilities with matching name; todo make matching more complex
+      facility_name.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+
   useEffect(()=>{
     setTimeout(()=>{
       setIsOnLoadScreen(false)
     }, 1000)
   }, [])
-  console.log(isOnLoadScreen)
-  // this is throwing an error
-  // const loading = isOnLoadScreen ? (
-  //   <>
-  //     <h1>
-  //       Welcome to Our App!
-  //     </h1>
-  //   </>
-  // ) : 
-  //   null
 
   if (isOnLoadScreen){
     return(
@@ -37,17 +64,19 @@ function App() {
   if (!isOnLoadScreen){
     return(
       <>
-        <MapView />
+        <HospitalSearch
+          setSearchValue = {setSearchValue}
+          mapRef = {mapRef}
+          searchValue = {searchValue}
+          facilities = {facilities}
+        />
+        <MapView 
+          mapRef = {mapRef}
+          facilities = {facilities}
+        />
       </>
     )
   }
 
-  // return (
-  //   // { loading }
-
-  //   // <>
-  //   // <MapView />
-  //   // </>
-  // );
 }
 export default App;
